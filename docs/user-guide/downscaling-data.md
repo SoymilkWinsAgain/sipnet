@@ -17,7 +17,7 @@ python -m downscaling.predict preflight --config "$run_dir/predict-scc.yaml"
 ```
 
 Site preparation writes to `site-products/` beside its YAML. Map prediction writes
-to `map-products/` beside its YAML. Use the same configuration for the subsequent
+to `map-products/` and reuses covariate panels in `period-panels/` beside its YAML. Use the same configuration for the subsequent
 `run` command. See [site preparation](downscaling-preparation.md) and
 [map prediction](downscaling.md) for installation and execution.
 
@@ -38,7 +38,7 @@ holder or copy them from the SCC locations in the example configurations.
 | Station domain · `sites`, `timezones`, `folds`, `periods` | Obtain the project site index, site timezone lookup, fixed fold assignments and site period calendar. The site index supplies the IDs used in the annual SIPNET means. |
 | Tower targets · `matched_towers`, `tower` | Obtain the project site-to-tower match table and gap-filled NEE and LE Parquet files with members `ens01`–`ens25`. |
 | SIPNET fluxes · `sipnet_means` | Use the shared annual ensemble means or build `year=YYYY.rds` from your SIPNET runs. See the [SIPNET handoff](downscaling-preparation.md#supply-your-own-sipnet-output). |
-| Map domain · `grid`, `periods`, `point_blocks` or `timezones` | Obtain the project reference GeoTIFF and map calendar. Use the shared point blocks or supply pixel timezones for the requested land pixels. Omit both lookups to derive timezones with R and lutz. |
+| Map domain · `grid`, `domain`, `periods`, `point_blocks` or `timezones` | Obtain the project reference GeoTIFF and map calendar. The shared `domain` directory supplies the land mask and tile inventories. Use the shared point blocks or supply pixel timezones for the requested land pixels. Omit both lookups to derive timezones with R and lutz. |
 | Prediction models · `model_bundle` | The shared model bundle has matching monthly fields in `spatial_cache`. For newly fitted models omit that cache and supply the bundle from the [training workflow](downscaling-training.md). |
 
 **Station coverage.** The shared site calendar covers 8,000 sites from

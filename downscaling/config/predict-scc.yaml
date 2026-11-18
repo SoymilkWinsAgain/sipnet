@@ -1,7 +1,9 @@
 model_bundle: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/period_models
 output: map-products
+panel_cache: period-panels
 sources:
   grid: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/grid.tiff
+  domain: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/domain
   periods: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/map_periods.csv
   era: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/era
   annual_covariates: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/annual_covariates
@@ -23,6 +25,6 @@ request:
   - 139
 resources:
   device: cuda
-  workers: 3
+  workers: 6
   cpu_threads: 1
   max_output_bytes: 53687091200
