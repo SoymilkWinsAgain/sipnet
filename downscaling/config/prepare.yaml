@@ -1,0 +1,18 @@
+output: /path/to/new_preparation
+sources:
+  sites: /inputs/site_index.csv
+  timezones: /inputs/grid_timezones.csv
+  periods: /inputs/period_calendar.csv
+  folds: /inputs/site_folds.csv
+  matched_towers: /inputs/matched_within_1km.csv
+  tower: /inputs/gapfilled
+  sipnet_means: /inputs/sipnet_means
+  era: /inputs/era
+  gldas: /inputs/gldas
+  gldas_registry: /inputs/soil_replacements.json
+  aqua_points: /inputs/aqua_csv
+  native_covariates: /inputs/native_covariates
+  annual_covariates: /inputs/annual_covariates
+  native_lc: /inputs/native_lc.tif
+  kgc: /inputs/koppen_geiger.tif
+  kgc_legend: /inputs/kg_legend.csv
