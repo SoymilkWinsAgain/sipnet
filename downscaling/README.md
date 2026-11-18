@@ -30,3 +30,6 @@ package installation.
 To train and calibrate models from verified prepared arrays, see the
 [training guide](../docs/user-guide/downscaling-training.md). Training exports the
 same portable bundle consumed by the prediction commands above.
+
+To build site training arrays and per-member NEE and LE targets from shared inputs,
+see the [preparation guide](../docs/user-guide/downscaling-preparation.md).

@@ -128,7 +128,7 @@ fit_member <- function(target, member) {
   chunks <- unique((matched$index - 1L) %/% 500L + 1L)
   files <- file.path(work, "training", target, paste0(partitions[chunk %in% chunks,name], ".parquet"))
   columns <- unique(c("index","utc","LC",tolower(target),member,features))
-  rows <- rbindlist(lapply(files, function(path) as.data.table(arrow::read_parquet(path,col_select=columns))))
+  rows <- rbindlist(lapply(files, function(path) as.data.table(arrow::read_parquet(path,col_select=dplyr::all_of(columns)))))
   models <- lapply(setNames(groups, groups), function(g) {
     data <- if (g=="EC") rows else rows[LC==as.integer(g)]
     fit_group(data, target, member, g, levels[[g]], threads)

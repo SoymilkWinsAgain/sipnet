@@ -11,12 +11,17 @@ def main():
     parser.add_argument("--resume", action="store_true")
     args = parser.parse_args()
     config = Preparation(args.config)
-    if args.command == "run" and (config.output / "jobs.json").exists() and not args.resume:
+    if (
+        args.command == "run"
+        and (config.output / "jobs.json").exists()
+        and not args.resume
+    ):
         parser.error("Use run --resume for an existing submission")
     token = config.preflight()
     print(f"Verified preparation inputs: {token}", flush=True)
     if args.command == "run":
         from downscaling.prepare.cluster import submit
+
         submit(config, token, args.resume)
 
 
