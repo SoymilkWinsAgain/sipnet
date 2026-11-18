@@ -1,41 +1,104 @@
 # SIPNET Downscaling
 
-Models can be produced with the [training and calibration workflow](downscaling-training.md).
+Produce period maps of net ecosystem exchange (NEE) and latent heat flux (LE)
+from environmental covariates. Each of three folds combines a proxy prediction,
+a period residual forest and a monthly spatial correction. Start with the shared model below, or
+[train a model from SIPNET and tower data](#train-from-sipnet-and-tower-data).
 
-The ensemble predicts mean NEE and LE for a requested grid window and period.
-Each fold combines a proxy prediction with a period residual forest and a monthly
-spatial correction. Predictors include the current period and four previous windows.
+## Make your first map
 
-## Installation and devices
+The BU SCC example predicts period 139 (13–28 July 2018 UTC) at grid row 4864,
+column 8704. Ask the project data holder for read access to the
+`period_models` bundle and map inputs in `downscaling/config/predict-scc.yaml`,
+including the files referenced by the source ledgers. With access, you can read
+them in place. For other installations, obtain the bundle from the data holder
+and set the paths in `downscaling/config/example.yaml` using the
+[data sources guide](downscaling-data.md).
 
-Use Python 3.12 in a dedicated environment. From the repository root:
+Run the commands from the root of the SIPNET checkout. On SCC, run
+`module load python3/3.12.4`. Choose a new writable directory for the
+environment and map products. This small example runs on CPU.
 
 ```bash
-python -m venv /path/to/workspace/envs/downscaling
-source /path/to/workspace/envs/downscaling/bin/activate
+run_dir=../downscaling-first-map
+mkdir -p "$run_dir"
+python3.12 -m venv "$run_dir/env"
+source "$run_dir/env/bin/activate"
 python -m pip install 'torch==2.12.1+cpu' --index-url https://download.pytorch.org/whl/cpu
 python -m pip install -r downscaling/requirements.txt
 ```
 
-For CUDA, install the CUDA build of PyTorch and the CUDA dependencies instead:
+On SCC, copy the shared configuration with its device set to CPU.
+
+```bash
+sed 's/device: cuda/device: cpu/' downscaling/config/predict-scc.yaml > "$run_dir/predict.yaml"
+```
+
+For your own inputs, save your edited `example.yaml` as `$run_dir/predict.yaml`
+with `output: map-products`. Run the prediction from the same shell.
+
+```bash
+python -m downscaling.predict preflight --config "$run_dir/predict.yaml"
+python -m downscaling.predict run --config "$run_dir/predict.yaml"
+python -m downscaling.predict report --config "$run_dir/predict.yaml"
+```
+
+For the SCC example, the report lists `NEE_139.tif` and `LE_139.tif` under
+`map-products/products/period/` beside the YAML. Open either GeoTIFF in a GIS
+or read it in Python. Band 1 holds the three-fold mean prediction for the
+period. Band 6 marks eligible pixels with 1.
+
+```bash
+python - "$run_dir/map-products/products/period" <<'PYTHON'
+from pathlib import Path
+import sys
+import rasterio
+
+for target in ("NEE", "LE"):
+    with rasterio.open(Path(sys.argv[1]) / f"{target}_139.tif") as src:
+        mean = src.read(1, masked=True)
+        eligible = (src.read(6) == 1).sum()
+        print(target, src.shape, "eligible pixels:", eligible, "window mean:", mean.mean())
+PYTHON
+```
+
+## Train from SIPNET and tower data
+
+Keep the preparation, training and prediction YAMLs together in your run
+directory so the following relative paths connect the stages.
+
+1. **Prepare.** Use the [SIPNET handoff](downscaling-preparation.md#supply-your-own-sipnet-output)
+   to write annual ensemble means, or use the shared means on SCC. Follow the
+   [preparation guide](downscaling-preparation.md) with `prepare-scc.yaml` on
+   SCC or `prepare.yaml` with your input paths and `output: site-products`.
+   The preparation command submits Grid Engine
+   jobs. Once finalization completes, `site-products/targets/nee.h5` and
+   `le.h5` hold the 25-member targets and `site-products/prepared_data/`
+   contains the training arrays.
+2. **Train.** Copy `downscaling/config/train.yaml` to the run directory. Set
+   `prepared_data: site-products/prepared_data` and `output: training`. Run the
+   [training commands](downscaling-training.md#run-training) to produce
+   `training/model_bundle/`.
+3. **Predict.** In a copy of your prediction YAML, set
+   `model_bundle: training/model_bundle` and `output: trained-maps`. Remove
+   `sources.spatial_cache` if present so the spatial correction comes from your
+   trained bundle. Run the same prediction commands above with this YAML.
+
+## Installation and devices
+
+For larger requests, use a dedicated Python 3.12 environment with one visible
+GPU and the CUDA packages:
 
 ```bash
 python -m pip install 'torch==2.12.1' --index-url https://download.pytorch.org/whl/cu130
 python -m pip install -r downscaling/requirements-cuda.txt
 ```
 
-CUDA requires a compatible NVIDIA driver and one visible GPU. Set
-`CUDA_VISIBLE_DEVICES` to the allocated device and `resources.device: cuda`.
-An unavailable requested device is an error; the program does not switch devices.
-CPU workers prepare tiles while one process consumes the selected device.
-Limit `workers` and `cpu_threads` to the current allocation; reserve one process
-for model evaluation. Start with a small spatial window to establish memory and
-storage requirements. No batch scheduler is required.
-
-Supply a timezone table to use a Python-only environment. Otherwise install R
-with the `lutz` package and ensure `Rscript` is on `PATH`; coordinate lookup uses
-its accurate Olson timezone polygons. Configure Python and R temporary/cache
-locations inside your writable workspace when working on a shared server.
+Set `resources.device: cuda` (the default in `predict-scc.yaml`). Set
+`workers` and `cpu_threads` for your allocation, reserving one process for
+model evaluation. The supplied SCC point blocks include timezones. To derive
+timezones from coordinates, install R with the `lutz` package and put
+`Rscript` on `PATH`.
 
 ## Configuration and inputs
 
@@ -70,12 +133,8 @@ changed through YAML overrides.
 
 ## Run and inspect products
 
-```bash
-python -m downscaling.predict preflight --config /path/to/run.yaml
-python -m downscaling.predict run --config /path/to/run.yaml
-python -m downscaling.predict run --resume --config /path/to/run.yaml
-python -m downscaling.predict report --config /path/to/run.yaml
-```
+To continue an interrupted prediction, run
+`python -m downscaling.predict run --resume --config "$run_dir/predict.yaml"`.
 
 Group consecutive period IDs in one request to reuse the four preceding panels
 in each block. Set the optional top-level `panel_cache` to the same writable

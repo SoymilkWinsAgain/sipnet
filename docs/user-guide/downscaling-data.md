@@ -2,24 +2,12 @@
 
 ## Use the shared inputs on BU SCC
 
-From the repository root, copy the configuration for your task to a writable
-directory outside the checkout. The examples read from
-`/projectnb/dietzelab/Julian_Zhu/shared/downscaling/` using your SCC account.
+The SCC configurations use the project collection at
+`/projectnb/dietzelab/Julian_Zhu/shared/downscaling/`. Ask the data holder for
+access to the underlying model and data files for your task.
 
-```bash
-run_dir=/path/to/your/workspace
-mkdir -p "$run_dir"
-cp downscaling/config/prepare-scc.yaml "$run_dir/"
-python -m downscaling.prepare preflight --config "$run_dir/prepare-scc.yaml"
-
-cp downscaling/config/predict-scc.yaml "$run_dir/"
-python -m downscaling.predict preflight --config "$run_dir/predict-scc.yaml"
-```
-
-Site preparation writes to `site-products/` beside its YAML. Map prediction writes
-to `map-products/` and reuses covariate panels in `period-panels/` beside its YAML. Use the same configuration for the subsequent
-`run` command. See [site preparation](downscaling-preparation.md) and
-[map prediction](downscaling.md) for installation and execution.
+- For maps, [make your first map](downscaling.md#make-your-first-map) using `downscaling/config/predict-scc.yaml`.
+- For training inputs and Yang targets, copy `downscaling/config/prepare-scc.yaml` to your run directory and follow the [preparation guide](downscaling-preparation.md). Its output is `site-products/` beside the YAML.
 
 ## Obtain the inputs elsewhere
 
