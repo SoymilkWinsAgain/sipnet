@@ -28,7 +28,9 @@ The SCC worker uses the Python 3.12.4 and R 4.4.3 modules.
 
 Pass `prepared_data/` to the [training command](downscaling-training.md). The
 proxy label is the period mean of the raw SIPNET ensemble mean. The three-hour
-training labels are the means of all 25 routed NEE or LE members.
+targets are the means of all 25 routed NEE or LE members. The period
+residual trainer averages these three-hour targets over each site window
+with complete support and subtracts the cross-fitted proxy prediction.
 
 Read `targets/nee.h5` and `targets/le.h5` independently. In Python the axes are
 period, member, site. Read the matching labels from `period_keys`, `ensemble_ids`
