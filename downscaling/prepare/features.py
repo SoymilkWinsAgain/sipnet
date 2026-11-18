@@ -108,11 +108,14 @@ class FeatureStream:
         mean[:, 1] = np.where(counts[:, 1] == len(times), sums[:, 1], np.nan)
         a = pd.DataFrame(mean, columns=DYNAMIC)
         a["index"] = self.points["index"].to_numpy()
-        a["period_id"] = int(row.period_id)
-        a["period_key"] = row.period_key
         a["expected_steps"] = len(times)
         for j, k in enumerate(DYNAMIC):
             a[k + "_support"] = counts[:, j]
+        return self.complete_period(a, row)
+
+    def complete_period(self, a, row):
+        a["period_id"] = int(row.period_id)
+        a["period_key"] = row.period_key
         center = self.vi.at(pd.Timestamp(row.period_key, tz="UTC"))
         for k in ("EVI", "NDVI"):
             a[k] = center[k]
