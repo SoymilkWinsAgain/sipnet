@@ -4,6 +4,7 @@ Start with the [downscaling Python environment](downscaling.md) and R 4.4 with
 data.table, arrow, dplyr, jsonlite, caret and xgboost (1.7.8.1). Copy
 `downscaling/config/prepare.yaml` and point it to the shared inputs and a new
 output directory. Relative paths resolve beside the configuration.
+For official downloads and the shared SCC configuration, see [Downscaling data sources](downscaling-data.md).
 
 | Input | Contents |
 |---|---|

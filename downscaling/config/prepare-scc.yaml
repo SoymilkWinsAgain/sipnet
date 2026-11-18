@@ -1,0 +1,18 @@
+output: site-products
+sources:
+  sites: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/sites.csv
+  timezones: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/site_timezones.csv
+  periods: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/site_periods.csv
+  folds: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/folds.csv
+  matched_towers: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/matched_towers.csv
+  tower: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/tower
+  sipnet_means: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/sipnet_means
+  era: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/era
+  gldas: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/gldas
+  gldas_registry: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/gldas_registry.json
+  aqua_points: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/aqua_points
+  native_covariates: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/native_covariates
+  annual_covariates: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/annual_covariates
+  native_lc: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/native_lc.tif
+  kgc: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/kgc.tif
+  kgc_legend: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/kgc_legend.csv

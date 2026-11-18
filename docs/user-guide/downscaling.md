@@ -39,6 +39,9 @@ locations inside your writable workspace when working on a shared server.
 
 ## Configuration and inputs
 
+Find official downloads, project rasters and a ready-to-use SCC configuration in
+[Downscaling data sources](downscaling-data.md).
+
 Copy `downscaling/config/example.yaml` to a writable workspace and fill in the
 paths. Relative paths resolve from the configuration file's directory.
 `model_bundle`, all `sources` and `output` must be disjoint. The input locations

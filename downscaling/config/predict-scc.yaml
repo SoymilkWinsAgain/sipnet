@@ -1,0 +1,29 @@
+model_bundle: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/model_bundle
+output: map-products
+sources:
+  grid: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/grid.tiff
+  periods: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/map_periods.csv
+  era: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/era
+  gldas: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/gldas
+  gldas_registry: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/gldas_registry.json
+  annual_covariates: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/annual_covariates
+  native_covariates: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/native_covariates
+  native_lc: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/native_lc.tif
+  kgc: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/kgc.tif
+  kgc_legend: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/kgc_legend.csv
+  aqua_catalog: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/aqua_catalog.json
+  aqua_receipts: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/aqua_receipts
+  timezones: /projectnb/dietzelab/Julian_Zhu/shared/downscaling/sample_timezones.parquet
+request:
+  window:
+    row: 4864
+    col: 8704
+    height: 16
+    width: 16
+  period_ids:
+  - 139
+resources:
+  device: cpu
+  workers: 3
+  cpu_threads: 1
+  max_output_bytes: 53687091200

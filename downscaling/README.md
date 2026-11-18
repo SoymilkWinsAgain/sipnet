@@ -31,5 +31,8 @@ To train and calibrate models from verified prepared arrays, see the
 [training guide](../docs/user-guide/downscaling-training.md). Training exports the
 same portable bundle consumed by the prediction commands above.
 
+For official download links and configurations that use the shared SCC inputs,
+see [Downscaling data sources](../docs/user-guide/downscaling-data.md).
+
 To build site training arrays and per-member NEE and LE targets from shared inputs,
 see the [preparation guide](../docs/user-guide/downscaling-preparation.md).
