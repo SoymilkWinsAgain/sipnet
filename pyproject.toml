@@ -19,4 +19,4 @@ version = {attr = "tools.__version__"}
 
 [tool.setuptools.packages.find]
 where = ["."]
-exclude = ["downscaling", "downscaling.*"]
+exclude = ["downscaling", "downscaling.*", "examples.downscaling"]
