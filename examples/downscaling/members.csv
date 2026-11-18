@@ -1,0 +1,3 @@
+site_id,member_id,output,climate
+1,1,../../tests/smoke/russell_1/sipnet.out,../../tests/smoke/russell_1/sipnet.clim
+1,2,../../tests/smoke/russell_2/sipnet.out,../../tests/smoke/russell_2/sipnet.clim

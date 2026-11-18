@@ -41,3 +41,45 @@ and `site_ids`. NEE uses the training flux convention and LE uses W/m².
 Existing shared soil replacements can be used directly. To reconstruct their
 registry from the three original NASA downloads, run
 `python -m downscaling.scripts.prepare_soil_replacements --downloads /path/to/downloads --output /path/to/replacements`.
+
+## Supply your own SIPNET output
+
+Yang reads annual ensemble means from `sources.sipnet_means`. To exercise
+the handoff, run the following from the repository root with a new output
+directory. The first command uses base R. The second uses the preparation
+environment's data.table, arrow and dplyr packages.
+
+```bash
+means=/path/to/workspace/russell-means
+Rscript --vanilla examples/downscaling/annual_means.R examples/downscaling/members.csv 2016 "$means"
+Rscript --vanilla examples/downscaling/check.R "$means"
+```
+
+The manifest groups two real Russell Ranch SIPNET runs as members of example
+site 1. The check reads their 2,928 three-hour intervals through the Yang
+reader and compares both fluxes to the original model output.
+
+For your runs, supply one CSV row per `site_id,member_id,output,climate`.
+Use the integer site IDs from the preparation site index and the same set of
+SIPNET members at each site. File paths may be absolute or relative to the CSV.
+Provide named `sipnet.out` columns and their matching three-hour `sipnet.clim`
+forcing on a UTC clock. The Russell files declare a 0.125-day step but their
+printed hours drift within each three-hour slot. The example uses the slot
+start as its UTC timestamp, so 00:00 labels [00:00, 03:00) UTC. For runs on a
+local clock, convert both output and forcing timestamps to UTC first.
+
+| SIPNET output, per three-hour step | Annual RDS value | Sign |
+| --- | --- | --- |
+| `nee`, g C/m² | Divide by 1,000 and 10,800 to obtain kg C/m²/s. | Positive for net carbon release to the atmosphere. |
+| `evapotranspiration`, cm of water | Multiply by 10 kg/m² per cm and the latent heat of vaporization, then divide by 10,800 to obtain W/m². | Positive for water loss to the atmosphere. |
+
+LE follows the latent heat used by the [PEcAn SIPNET converter](https://github.com/PecanProject/pecan/blob/368c3b76086e2891cbd12fcebd9b3e422fb9d579/models/sipnet/R/model2netcdf.SIPNET.R).
+For example, the two members' first NEE values are 0.070 and 0.092 g C/m²,
+giving an annual-file entry of `7.5e-9` kg C/m²/s. Yang applies its NEE scale
+(`1e8 / 1.157407`) on read and uses LE directly.
+
+Run the writer once per input year and point `sources.sipnet_means` to the
+resulting directory. Each `year=YYYY.rds` contains `site_ids`, UTC `time`,
+and two site-by-time matrices, `nee` and `le`. Each entry averages the
+available SIPNET members for that site, time and flux. Yang combines these
+means with the 25 tower target members during site preparation.
