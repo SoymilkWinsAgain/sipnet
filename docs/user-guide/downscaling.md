@@ -84,6 +84,8 @@ directory so the following relative paths connect the stages.
    `sources.spatial_cache` if present so the spatial correction comes from your
    trained bundle. Run the same prediction commands above with this YAML.
 
+Follow the [small workflow example](downscaling-example.md) to run the SIPNET handoff and exercise training and prediction on one period.
+
 ## Installation and devices
 
 For larger requests, use a dedicated Python 3.12 environment with one visible

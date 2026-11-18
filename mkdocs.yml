@@ -14,6 +14,7 @@ nav:
       - Downscaling data sources: user-guide/downscaling-data.md
       - Downscaling preparation: user-guide/downscaling-preparation.md
       - Downscaling training: user-guide/downscaling-training.md
+      - Downscaling example: user-guide/downscaling-example.md
       - Model Inputs: user-guide/model-inputs.md
       - Model Outputs: user-guide/model-outputs.md
   - Developer Guide:
